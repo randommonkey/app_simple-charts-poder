@@ -1,12 +1,12 @@
 ---
-Chart titles:
+Chart_titles:
 - title
 - subtitle
 - caption
-Axis names:
+Axis_names:
 - horLabel
 - verLabel
-Chart styles:
+Chart_styles:
 - theme
 - orientation
 - graph_type
@@ -17,7 +17,7 @@ Chart styles:
 - text_show
 - fill_opacity
 - null_color
-Data settings:
+Data_settings:
 - agg
 - drop_na
 - percentage
@@ -27,7 +27,7 @@ Data settings:
 - order1
 - order2
 - sliceN
-Number format:
+Number_format:
 - marks
 - nDigits
 - prefix

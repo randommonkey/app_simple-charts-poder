@@ -1,0 +1,6 @@
+---
+theme:
+- background: "#000000"
+  lineWidth: 3
+  grid: true
+  font-family: Ubuntu

@@ -2,7 +2,7 @@
 title:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: title_viz
       label: Title
@@ -11,7 +11,7 @@ title:
 subtitle:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: subtitle_viz
       label: Subtitle
@@ -20,7 +20,7 @@ subtitle:
 caption:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: caption_viz
       label: Caption
@@ -29,7 +29,7 @@ caption:
 theme:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: theme_viz
       label: Theme
@@ -45,7 +45,7 @@ theme:
 border_color:
   show: true
   input_info:
-    input: colourInput
+    input_type: colourInput
     input_params:
       inputId: border_color_viz
       label: Border color
@@ -54,7 +54,7 @@ border_color:
 background:
   show: true
   input_info:
-    input: colourInput
+    input_type: colourInput
     input_params:
       inputId: background_viz
       label: Background
@@ -64,7 +64,7 @@ background:
 border_width:
   show: true
   input_info:
-    input: sliderInput
+    input_type: sliderInput
     input_params:
       inputId: border_width_viz
       label: Border width
@@ -76,7 +76,7 @@ border_width:
 color_hover:
   show: true
   input_info:
-    input: colourInput
+    input_type: colourInput
     input_params:
       inputId: color_hover_viz
       label: Hover color
@@ -86,7 +86,7 @@ color_hover:
 color_opacity:
   show: true
   input_info:
-    input: sliderInput
+    input_type: sliderInput
     input_params:
       inputId: color_opacity_viz
       label:  Color opacity
@@ -98,7 +98,7 @@ color_opacity:
 fill_opacity:
   show: true
   input_info:
-    input: sliderInput
+    input_type: sliderInput
     input_params:
       inputId: fill_opacity_viz
       label: Fill opacity
@@ -110,7 +110,7 @@ fill_opacity:
 drop_na:
   show: true
   input_info:
-    input: checkboxInput
+    input_type: checkboxInput
     input_params:
       inputId: drop_na_viz
       label: Drop na
@@ -119,7 +119,7 @@ drop_na:
 text_show:
   show: true
   input_info:
-    input: checkboxInput
+    input_type: checkboxInput
     input_params:
       inputId: text_show_viz
       label: Show text
@@ -128,7 +128,7 @@ text_show:
 graph_type:
   show: true
   input_info:
-    input: radioButtons
+    input_type: radioButtons
     input_params:
       inputId: graph_type_viz
       label: Graph type
@@ -142,7 +142,7 @@ graph_type:
 highlight_value:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: highlight_value_viz
       label: Highlight category
@@ -154,7 +154,7 @@ highlight_value:
 highlight_valueColor:
   show: true
   input_info:
-    input: colourInput
+    input_type: colourInput
     input_params:
       inputId: highlight_valueColor_viz
       label: highlight color
@@ -163,7 +163,7 @@ highlight_valueColor:
 horLabel:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: horLabel_viz
       label: X axis label
@@ -172,7 +172,7 @@ horLabel:
 verLabel:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: verLabel_viz
       label: Y axis label
@@ -181,7 +181,7 @@ verLabel:
 nDigits:
   show: true
   input_info:
-    input: numericInput
+    input_type: numericInput
     input_params:
       inputId: nDigits_viz
       label: Number digits
@@ -192,7 +192,7 @@ nDigits:
 horLine:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: horLine_viz
       label: X axix line
@@ -201,7 +201,7 @@ horLine:
 verLine:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: verLine_viz
       label: Y axis line
@@ -210,7 +210,7 @@ verLine:
 label_wrap:
   show: true
   input_info:
-    input: sliderInput
+    input_type: sliderInput
     input_params:
       inputId: label_wrap_viz
       label: Label wrap
@@ -222,7 +222,7 @@ label_wrap:
 order:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: order_viz
       label: Category order
@@ -234,7 +234,7 @@ order:
 order1:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: order1_viz
       label: Legend order
@@ -246,7 +246,7 @@ order1:
 order2:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: order2_viz
       label:  X axis order
@@ -258,7 +258,7 @@ order2:
 percentage:
   show: true
   input_info:
-    input: checkboxInput
+    input_type: checkboxInput
     input_params:
       inputId: percentage_viz
       label: Percentage
@@ -267,7 +267,7 @@ percentage:
 suffix:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: suffix_viz
       label: Suffix
@@ -276,7 +276,7 @@ suffix:
 prefix:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: prefix_viz
       label: Prefix
@@ -285,7 +285,7 @@ prefix:
 regression:
   show: true
   input_info:
-    input: checkboxInput
+    input_type: checkboxInput
     input_params:
       inputId: regression_viz
       label: Regression
@@ -300,7 +300,7 @@ regression_color:
     compare: value
     filter: true
   input_info:
-    input: colourInput
+    input_type: colourInput
     input_params:
       inputId: regression_color_viz
       label: Regression line color
@@ -315,7 +315,7 @@ regression_equation:
     compare: value
     filter: true
     input_info: 
-    input: checkboxInput
+    input_type: checkboxInput
     input_params:
       inputId: regression_equation_viz
       label: Regression equation
@@ -324,7 +324,7 @@ regression_equation:
 marks:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: marks_viz
       label: Number format
@@ -346,7 +346,7 @@ marks:
 agg:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: agg_viz
       label: Aggregation
@@ -362,7 +362,7 @@ agg:
 agg_text:
   show: true
   input_info:
-    input: textInput
+    input_type: textInput
     input_params:
       inputId: agg_text_viz
       label: Tooltip label
@@ -370,7 +370,7 @@ agg_text:
 orientation:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: orientation_viz
       label: Orientation
@@ -384,7 +384,7 @@ orientation:
 sliceN:
   show: true
   input_info:
-    input: sliderInput
+    input_type: sliderInput
     input_params:
       inputId: sliceN_viz
       label: Slice
@@ -396,7 +396,7 @@ sliceN:
 sort:
   show: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: sort_viz
       label: Sort
@@ -412,7 +412,7 @@ sort:
 legend_show:
   show: true
   input_info:
-    input: checkboxInput
+    input_type: checkboxInput
     input_params:
       inputId: legend_show_viz
       label: Show legend
@@ -427,7 +427,7 @@ legend_position:
     compare: value
     filter: true
   input_info:
-    input: selectizeInput
+    input_type: selectizeInput
     input_params:
       inputId: legend_position_viz
       label: Legend position
