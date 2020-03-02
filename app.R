@@ -3,9 +3,9 @@ library(dsmodules)
 library(parmesan)
 library(hotr)
 library(shinyinvoer)
+library(colourpicker)
 library(hgchmagic)
 library(ggmagic)
-
 
 ui <- panelsPage(
   panel(
@@ -27,9 +27,8 @@ ui <- panelsPage(
     width = 400,
     collapsed = TRUE,
     body = div(
-     #verbatimTextOutput("debug"),
-     uiOutput("select_var"),
-     uiOutput("dataset") 
+      uiOutput("select_var"),
+      uiOutput("dataset") 
     )
   ),
   panel(
@@ -43,15 +42,16 @@ ui <- panelsPage(
     title = "Viz",
     body = div(
       uiOutput("vizView"),
+      verbatimTextOutput('blabla'),
       shinypanels::modal(id = 'test', title = 'Download plot',
-            conditionalPanel(
-              condition = "input.library_viz == 'highcharter'",
-              downloadImagesUI("down_hgchmagic", "Descarga", c("html", "png", "jpeg", "pdf"))
-            ),
-            conditionalPanel(
-              condition = "input.library_viz == 'ggplot'",
-              downloadImagesUI("down_ggmagic", "Descarga", c( "jpeg", "pdf"))
-            )
+                         conditionalPanel(
+                           condition = "input.library == 'highcharter'",
+                           downloadImagesUI("down_hgchmagic", "Descarga", c("html", "png", "jpeg", "pdf"))
+                         ),
+                         conditionalPanel(
+                           condition = "input.library == 'ggplot'",
+                           downloadImagesUI("down_ggmagic", "Descarga", c( "svg", "png", "jpeg", "pdf"))
+                         )
       ),
       shinypanels::modalButton(label = "Download plot", modal_id = "test")
     ),
@@ -80,13 +80,7 @@ server <-  function(input, output, session) {
     })
   })
   
-  output$viz_icons <- renderUI({
-    graph <- c("bar", "line", "pie", "treemap")
   
-    buttonImageInput('viz_selection', graph, graph, file = "img/svg/", format = "svg")
-  })
-  
-
   inputData <- callModule(tableInput, "initial_data",
                           sampleFile = list("Income"="data/sampleData/emisiones_c02.csv",
                                             "Population"="data/sampleData/poblacion.csv"),
@@ -100,79 +94,149 @@ server <-  function(input, output, session) {
   
   output$select_var <- renderUI({
     names_data <- names(inputData())
-    selectizeInput("var_order", "Choose order", names_data,  multiple = TRUE, options = list(plugins= list('remove_button', 'drag_drop')))
+    selectizeInput("var_order", 
+                   "Choose order",
+                   names_data,  
+                   multiple = TRUE,
+                   options = list(plugins= list('remove_button', 'drag_drop'))
+    )
   })
-
-
+  
+  
   output$dataset <- renderUI({
     if(is.null(inputData()))return()
     order_var <- input$var_order
     suppressWarnings(
-      hotr("data_input", data = inputData(), order = order_var, options = list(height = 470))
+      hotr("data_input", data = inputData(), order = order_var, options = list(height = 470), enableCTypes = TRUE)
     )
   })
-
-  # data_viz <- reactive({
-  #   data <- input$data_input$data
-  #   dic <- input$data_input$dic
-  #   fringe(data, dic)
+  
+  
+  firstCat <- reactive({
+    unique(input$data_input$data$a)
+  }, env = react_env)
+  
+  second_cats <- reactive({
+    unique(input$data_input$data$b)
+  }, env = react_env)
+  
+  
+  # observe({
+  #   updateSelectizeInput(session, "order", choices = first_cats(), selected = input$order)
+  #   updateSelectizeInput(session, "highlight_value", choices = first_cats(), selected = input$highlight_value)
+  #   updateSelectizeInput(session, "order1", choices = first_cats(), selected = input$order1)
+  #   updateSelectizeInput(session, "order2", choices = second_cats(), selected = input$order2)
   # })
-
+  
+  
+  ftype <- reactive({
+    if (is.null(input$data_input$dic$ctype)) return()
+    ftype_riddle <- input$data_input$dic$ctype
+    ftype_riddle <- gsub("Yea", "Cat", paste(ftype_riddle, collapse = ""))
+    ftype_riddle 
+  }, env = react_env)
+  
+  
+  
+  ftype_image_recommendation <- reactive({
+    ftype_end <- ftype()
+    if (is.null(ftype_end)) return()
+    all_ftypes <- yaml::read_yaml("data/aux/ftypes.yaml")
+    all_ftypes[[ftype_end]]
+  }, env = react_env)
+  
+  
+  actual_but <- reactiveValues(active = 'bar')
+  
+  observe({
+    viz_rec <- ftype_image_recommendation()
+    if (is.null(viz_rec)) return()
+    if (is.null(input$viz_selection)) return()
+    if (!( input$viz_selection %in% viz_rec)) {
+      actual_but$active <- viz_rec[1]  
+    } else {
+      actual_but$active <- input$viz_selection
+    }
+  })
+  
+  output$viz_icons <- renderUI({
+    buttonImageInput('viz_selection',
+                     'Viz type', 
+                     images = ftype_image_recommendation(),
+                     path = 'img/svg/',
+                     format = 'svg',
+                     active = actual_but$active)
+  })
+  
+  
+  data_viz <- reactive({
+    data <- input$data_input$data
+    dic <- input$data_input$dic
+    fringe(data, dic)
+  })
+  
   output$controls <- renderUI({
-    
-    a <- parmesan_render_ui(config_path = config_path, input = input, env = react_env)
-    a
-    print(a)
+    sections <- yaml::read_yaml('parmesan/layout.yaml')
+    sections <- setdiff(names(sections), 'Viz types')
+    map(sections, function(section) {
+      parmesan_render_ui(section = section, config_path = config_path, input = input, env = react_env)
+    })
   })
-
-
+  
+  
+  opts_viz <- reactive({
+    params <- vals$inputs[-1]
+    params$marks <- strsplit(input$marks, '&')[[1]]
+    params
+  })
+  
   vizHg <- reactive({
-    #if (input$library_viz != "highchart") return()
-    ctype <- "CatCatNum"#ctype()
-    gtype <- input$viz_selection
+    
+    ctype <- ftype()
+    gtype <- actual_but$active
     typeV <- paste0('hgch_', gtype, '_', ctype)
-    data <- sampleData("Cat-Cat-Num")
-    #print(typeV)
-    #print(input$data_input$dic)
-    viz <- do.call(typeV, c(list(data = data, opts = list(title = input$title_viz))))
+    data <- data_viz()
+    
+    viz <- do.call(typeV, c(list(data = data, opts = opts_viz())))
     viz
-    #hgch_bar_CatCatNum(sampleData("Cat-Cat-Num"))
+    
   })
-
+  
   output$vizViewHg <- renderHighchart({
-    vizHg()
+    suppressWarnings(
+      vizHg()
+    )
   })
-
+  
   vizGg <- reactive({
     #if (input$library_viz != "highchart") return()
-    ctype <- "CatCatNum"#ctype()
-    gtype <- input$viz_selection
+    ctype <- ftype()
+    gtype <- actual_but$active
     typeV <- paste0('gg_', gtype, '_', ctype)
-    data <- sampleData("Cat-Cat-Num")
-    #print(typeV)
-    #print(input$data_input$dic)
-    viz <- do.call(typeV, c(list(data = data, opts = list(title = input$title_viz))))
+    data <- data_viz()
+    viz <- suppressMessages(
+      do.call(typeV, c(list(data = data, opts = opts_viz())))
+    )
     viz
   })
-
+  
   output$vizViewGg <- renderPlot({
     vizGg()
   })
-
+  
   output$vizView <- renderUI({
-    if (is.null(input$library_viz)) return()
+    if (is.null(input$library)) return()
     
-    if (input$library_viz == "highcharter") {
+    if (input$library == "highcharter") {
       highchartOutput("vizViewHg")
     } else {
       plotOutput("vizViewGg")
     }
   })
-
-
-
+  
+  
   callModule(downloadImages, "down_hgchmagic", graph = vizHg(), lib = "highcharter", formats = c("html", "png", "jpeg", "pdf"))
-  callModule(downloadImages, "down_ggmagic", graph = vizGg(), lib = "ggplot", formats = c( "jpeg", "pdf"))
+  callModule(downloadImages, "down_ggmagic", graph = vizGg(), lib = "ggplot", formats = c("svg", "png", "jpeg", "pdf"))
 }
 
 

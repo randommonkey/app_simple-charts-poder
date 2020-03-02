@@ -1,4 +1,6 @@
 ---
+Viz types:
+- viz_type
 Format plot:
 - library
 Chart titles:
@@ -7,5 +9,26 @@ Chart titles:
 Axis Names:
 - hor_label
 - ver_label
-Viz types:
-- viz_type
+Chart_styles:
+- background
+- fill_opacity
+- orientation
+Number_format:
+- n_digits
+- marks
+- prefix
+- suffix
+- agg_text
+Data_settings:
+- agg
+- drop_na
+- percentage
+- sort
+- label_wrap
+- order
+- order2
+- order1
+- slice_n
+Highligth:
+- highlight_value
+- highlight_value_color

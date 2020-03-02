@@ -1,0 +1,24 @@
+---
+Cat:
+- bar
+- line
+- pie
+- donut
+- area
+- treemap
+CatNum:
+- bar
+- line
+- pie
+- donut
+- area
+- treemap
+CatCatNum:
+- bar
+- line
+- area
+- treemap
+NumNum:
+- scatter
+CatNumNum:
+- scatter
