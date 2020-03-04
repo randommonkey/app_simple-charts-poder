@@ -1,14 +1,4 @@
 ---
-# viz_type:
-#   show: true
-# depends_on: ftype_image_recommendation
-# input_info:
-#   input_type: buttonImageInput
-# input_params: 
-# label: ""
-# images: ftype_image_recommendation
-# path: img/svg/
-#   format: svg
 library:
   show: true
   input_info:
@@ -22,47 +12,30 @@ library:
         - ggplot
       inline: true
   update_param: select
-title:
-  show: true
-  input_info:
-    input_type: textInput
-    input_params:
-      label: Title
-      value: ''
-  update_param: value
-subtitle:
-  show: true
-  input_info:
-    input_type: textInput
-    input_params:
-      label: Subtitle
-      value: ''
-  update_param: value
-caption:
-  show: true
-  input_info:
-    input_type: textInput
-    input_params:
-      label: Caption
-      value: ''
-  update_param: value
-hor_label:
+agg:
   show: true
   depends_on: 
-    viz_selection:
-      one_of: [bar, area, line, scatter, treemap]
+    ftype:
+      one_of: [CatNum, CatCatNum]
   input_info:
-    input_type: textInput
+    input_type: selectizeInput
     input_params:
-      label: X axis label
-      value: ''
-  update_param: value
-ver_label:
+      label: Aggregation
+      choices:
+        Total:
+        - sum
+        Mean:
+        - mean
+        Median:
+        - median
+      selected: discrete
+  update_param: selected
+agg_text:
   show: true
   input_info:
     input_type: textInput
     input_params:
-      label: Y axis label
+      label: Tooltip label
       value: ''
   update_param: value
 background:
@@ -73,6 +46,52 @@ background:
       label: Background
       value: "#ffffff"
       allowTransparent: true
+  update_param: value
+caption:
+  show: true
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Caption
+      value: ''
+  update_param: value
+colors:
+  show: false
+  input_info:
+    input_type: colorPalette
+    input_params:
+      colors: ['#FFDAAC', '#AACDFF', '#FFADCA']
+    update_param: colors
+color_hover:
+  show: false
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Hover color
+      value: "#dddddd"
+  update_param: value
+color_scale:
+  show: true
+  input_info:
+    input_type: selectizeInput
+    input_params:
+      label: Color Scale
+      choices:
+        Without:
+        - no
+        Discrete:
+        - discrete
+        Continous:
+        - continuous
+      selected: discrete
+  update_param: selected
+drop_na:
+  show: true
+  input_info:
+    input_type: checkboxInput
+    input_params:
+      label: Drop na
+      value: true
   update_param: value
 fill_opacity:
   show: true
@@ -87,22 +106,6 @@ fill_opacity:
       max: 1
       value: 0.5
       step: 0.1
-  update_param: value
-drop_na:
-  show: true
-  input_info:
-    input_type: checkboxInput
-    input_params:
-      label: Drop na
-      value: true
-  update_param: value
-text_show:
-  show: true
-  input_info:
-    input_type: checkboxInput
-    input_params:
-      label: Show text
-      value: true
   update_param: value
 graph_type:
   show: true
@@ -136,70 +139,79 @@ highlight_value_color:
       label: highlight color
       value: "#FFFFFF"
   update_param: value
-agg:
-  show: true
-  input_info:
-    input_type: selectizeInput
-    input_params:
-      label: Aggregation
-      choices:
-        Total:
-        - sum
-        Mean:
-        - mean
-        Median:
-        - median
-      selected: discrete
-  update_param: selected
-agg_text:
-  show: true
-  input_info:
-    input_type: textInput
-    input_params:
-      label: Tooltip label
-      value: ''
-  update_param: value
-orientation:
+hor_label:
   show: true
   depends_on: 
     viz_selection:
-      one_of: [bar, area, line]
+      one_of: [bar, area, line, scatter, treemap]
   input_info:
-    input_type: selectizeInput
+    input_type: textInput
     input_params:
-      label: Orientation
-      choices:
-        Vertical:
-        - ver
-        Horizotal:
-        - hor
-      selected: ver
-  update_param: selected
-slice_n:
+      label: X axis label
+      value: ''
+  update_param: value
+hor_line:
+  show: false
+  input_info:
+    input_type: textInput
+    input_params:
+      label: X axix line
+      value: 
+  update_param: value
+hor_line_label:
+  show: false
+  input_info:
+    input_type: textInput
+    input_params:
+      label: X axix line label
+      value: 
+  update_param: value
+label_wrap:
   show: true
   input_info:
     input_type: sliderInput
     input_params:
-      label: Slice
-      min: 0
-      max: 5
+      label: Label wrap
+      min: 10
+      max: 100
       value: 1
-      step: 1
+      step: 5
   update_param: value
-sort:
+label_wrap_legend:
+  show: true
+  input_info:
+    input_type: sliderInput
+    input_params:
+      label: Label wrap legend
+      min: 10
+      max: 100
+      value: 20
+      step: 5
+  update_param: value
+legend_show:
+  show: true
+  input_info:
+    input_type: checkboxInput
+    input_params:
+      label: Show legend
+      value: true
+  update_param: value
+legend_position:
   show: true
   input_info:
     input_type: selectizeInput
     input_params:
-      label: Sort
+      label: Legend position
       choices:
-        Without:
-        - no
-        upward:
-        - asc
-        falling:
-        - desc
-      selected: false
+        Bottom left:
+        - bottomleft
+        Bottom right:
+        - bottomright
+        Top left:
+        - topleft
+        Top right:
+        - topright
+      selected: bottomleft
   update_param: selected
 marks:
   show: true
@@ -222,16 +234,15 @@ marks:
         - " &,"
       selected: ",&."
   update_param: selected
-label_wrap:
+n_digits:
   show: true
   input_info:
-    input_type: sliderInput
+    input_type: numericInput
     input_params:
-      label: Label wrap
-      min: 10
-      max: 100
+      label: Number digits
       value: 1
-      step: 5
+      min: 0
+      max: 13
   update_param: value
 order:
   show: true
@@ -276,13 +287,29 @@ order2:
     input_type: selectizeInput
     input_params:
       label:  X axis order
-      choices:
+      choices: reactive__secondCat
       selected: 
       multiple: true
       options: 
         plugins:
         - - remove_button
         - - drag_drop
+  update_param: selected
+orientation:
+  show: true
+  depends_on: 
+    viz_selection:
+      one_of: [bar, area, line]
+  input_info:
+    input_type: selectizeInput
+    input_params:
+      label: Orientation
+      choices:
+        Vertical:
+        - ver
+        Horizotal:
+        - hor
+      selected: ver
   update_param: selected
 percentage:
   show: true
@@ -292,14 +319,6 @@ percentage:
       label: Percentage
       value: false
   update_param: value
-suffix:
-  show: true
-  input_info:
-    input_type: textInput
-    input_params:
-      label: Suffix
-      value: ''
-  update_param: value
 prefix:
   show: true
   input_info:
@@ -308,13 +327,99 @@ prefix:
       label: Prefix
       value: ''
   update_param: value
-n_digits:
+text_show:
   show: true
   input_info:
-    input_type: numericInput
+    input_type: checkboxInput
     input_params:
-      label: Number digits
-      value: 1
+      label: Show text
+      value: true
+  update_param: value
+slice_n:
+  show: true
+  input_info:
+    input_type: sliderInput
+    input_params:
+      label: Slice
       min: 0
-      max: 13
+      max: 5
+      value: 1
+      step: 1
+  update_param: value
+sort:
+  show: true
+  input_info:
+    input_type: selectizeInput
+    input_params:
+      label: Sort
+      choices:
+        Without:
+        - no
+        upward:
+        - asc
+        falling:
+        - desc
+      selected: false
+  update_param: selected
+spline:
+  show: true
+  depends_on: 
+    viz_selection:
+      one_of: [area, line]  
+  input_info:
+    input_type: checkboxInput
+    input_params:
+      label: Spline
+      value: true
+  update_param: value
+start_zero:
+  show: true
+  depends_on: 
+    viz_selection:
+      one_of: [area, line]
+  input_info:
+    input_type: checkboxInput
+    input_params:
+      label: Start zero
+      value: true
+  update_param: value
+subtitle:
+  show: true
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Subtitle
+      value: ''
+  update_param: value
+suffix:
+  show: true
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Suffix
+      value: ''
+  update_param: value
+title:
+  show: true
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Title
+      value: ''
+  update_param: value
+ver_label:
+  show: true
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Y axis label
+      value: ''
+  update_param: value
+ver_line:
+  show: false
+  input_info:
+    input_type: textInput
+    input_params:
+      label: Y axis line
+      value: 
   update_param: value

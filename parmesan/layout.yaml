@@ -13,6 +13,11 @@ Chart_styles:
 - background
 - fill_opacity
 - orientation
+- spline
+- start_zero
+- color_scale
+- colors
+- color_hover
 Number_format:
 - n_digits
 - marks
@@ -25,10 +30,18 @@ Data_settings:
 - percentage
 - sort
 - label_wrap
+- label_wrap_legend
 - order
 - order2
 - order1
 - slice_n
+Lines:
+- hor_line
+- ver_line
 Highligth:
 - highlight_value
 - highlight_value_color
+Legends:
+- legend_show
+Legend position:
+- legend_position

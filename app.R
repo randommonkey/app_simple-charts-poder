@@ -116,17 +116,10 @@ server <-  function(input, output, session) {
     unique(input$data_input$data$a)
   }, env = react_env)
   
-  second_cats <- reactive({
+  secondCat <- reactive({
     unique(input$data_input$data$b)
   }, env = react_env)
   
-  
-  # observe({
-  #   updateSelectizeInput(session, "order", choices = first_cats(), selected = input$order)
-  #   updateSelectizeInput(session, "highlight_value", choices = first_cats(), selected = input$highlight_value)
-  #   updateSelectizeInput(session, "order1", choices = first_cats(), selected = input$order1)
-  #   updateSelectizeInput(session, "order2", choices = second_cats(), selected = input$order2)
-  # })
   
   
   ftype <- reactive({
@@ -187,7 +180,7 @@ server <-  function(input, output, session) {
   opts_viz <- reactive({
     params <- vals$inputs[-1]
     params$marks <- strsplit(input$marks, '&')[[1]]
-    params
+    params[1:10]
   })
   
   vizHg <- reactive({
