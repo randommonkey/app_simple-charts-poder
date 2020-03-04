@@ -1,6 +1,4 @@
 ---
-Viz types:
-- viz_type
 Format plot:
 - library
 Chart titles:
@@ -16,8 +14,6 @@ Chart_styles:
 - spline
 - start_zero
 - color_scale
-- colors
-- color_hover
 Number_format:
 - n_digits
 - marks
@@ -27,6 +23,7 @@ Number_format:
 Data_settings:
 - agg
 - drop_na
+- drop_na_legend
 - percentage
 - sort
 - label_wrap

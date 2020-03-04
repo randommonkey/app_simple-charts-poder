@@ -7,6 +7,15 @@ library(colourpicker)
 library(hgchmagic)
 library(ggmagic)
 
+config_path <- "parmesan/"
+input_ids <- parmesan_input_ids(config_path = config_path)
+input_ids_values <- lapply(input_ids, function(i){
+  NA
+})
+names(input_ids_values) <- input_ids
+all_sections <- names(yaml::read_yaml('parmesan/layout.yaml'))
+
+
 ui <- panelsPage(
   panel(
     title = "Upload Data", 
@@ -35,7 +44,7 @@ ui <- panelsPage(
     title = "Edit viz",
     width = 350,
     body = div(
-      uiOutput("controls")
+      class = 'controls'
     )
   ),
   panel(
@@ -59,12 +68,6 @@ ui <- panelsPage(
   )
 )
 
-config_path <- "parmesan/"
-input_ids <- parmesan_input_ids(config_path = config_path)
-input_ids_values <- lapply(input_ids, function(i){
-  NA
-})
-names(input_ids_values) <- input_ids
 
 
 server <-  function(input, output, session) {
@@ -120,7 +123,9 @@ server <-  function(input, output, session) {
     unique(input$data_input$data$b)
   }, env = react_env)
   
-  
+  tables_has_na <- reactive({
+    sum(is.na(input$data_input$data$a)) >= 1
+  }, env = react_env)
   
   ftype <- reactive({
     if (is.null(input$data_input$dic$ctype)) return()
@@ -129,7 +134,11 @@ server <-  function(input, output, session) {
     ftype_riddle 
   }, env = react_env)
   
-  
+  legend_has_na <- reactive({
+  if (ncol(input$data_input$data) < 2) l_na <- FALSE
+   l_na <- sum(is.na(input$data_input$data$b)) >= 1 & ftype() %in%  c('CatCat', 'CatCatNum')
+   l_na
+  }, env = react_env)
   
   ftype_image_recommendation <- reactive({
     ftype_end <- ftype()
@@ -168,19 +177,22 @@ server <-  function(input, output, session) {
     fringe(data, dic)
   })
   
-  output$controls <- renderUI({
-    sections <- yaml::read_yaml('parmesan/layout.yaml')
-    sections <- setdiff(names(sections), 'Viz types')
-    map(sections, function(section) {
-      parmesan_render_ui(section = section, config_path = config_path, input = input, env = react_env)
-    })
-  })
+  
+map(all_sections, function(section){
+ output[[gsub('[[:space:]]', '_',section)]] <- renderUI({
+   parmesan_render_ui(section = section, config_path = config_path, input = input, env = react_env)
+ })
+})
+
+map(all_sections, function(section){
+  insertUI(".controls", ui = uiOutput(gsub('[[:space:]]', '_',section)))
+})
   
   
   opts_viz <- reactive({
     params <- vals$inputs[-1]
-    params$marks <- strsplit(input$marks, '&')[[1]]
-    params[1:10]
+    #params$marks <- strsplit(input$marks, '&')[[1]]
+    params
   })
   
   vizHg <- reactive({

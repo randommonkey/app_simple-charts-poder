@@ -64,8 +64,11 @@ colors:
     update_param: colors
 color_hover:
   show: false
+  depends_on: 
+    library:
+      equals: highcharter
   input_info:
-    input_type: textInput
+    input_type: colourInput
     input_params:
       label: Hover color
       value: "#dddddd"
@@ -87,10 +90,24 @@ color_scale:
   update_param: selected
 drop_na:
   show: true
+  depends_on: 
+    tables_has_na:
+      equals: true
   input_info:
     input_type: checkboxInput
     input_params:
       label: Drop na
+      value: true
+  update_param: value
+drop_na_legend:
+  show: true
+  depends_on: 
+    legend_has_na:
+      equals: true
+  input_info:
+    input_type: checkboxInput
+    input_params:
+      label: Drop na legend
       value: true
   update_param: value
 fill_opacity:
@@ -242,7 +259,7 @@ n_digits:
       label: Number digits
       value: 1
       min: 0
-      max: 13
+      max: 5
   update_param: value
 order:
   show: true
@@ -282,7 +299,7 @@ order2:
   show: true
   depends_on: 
     ftype:
-      equals: CatCatNum
+      one_of: [CatCat, CatCatNum]
   input_info:
     input_type: selectizeInput
     input_params:
