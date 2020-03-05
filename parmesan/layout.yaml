@@ -8,6 +8,7 @@ Axis Names:
 - hor_label
 - ver_label
 Chart_styles:
+- theme
 - background
 - fill_opacity
 - orientation
@@ -38,7 +39,3 @@ Lines:
 Highligth:
 - highlight_value
 - highlight_value_color
-Legends:
-- legend_show
-Legend position:
-- legend_position

@@ -44,7 +44,7 @@ background:
     input_type: colourInput
     input_params:
       label: Background
-      value: "#ffffff"
+      value: "#FFFFFFF" #reactive__colortheme
       allowTransparent: true
   update_param: value
 caption:
@@ -139,17 +139,23 @@ graph_type:
   update_param: select
 highlight_value:
   show: true
+  depends_on: 
+    ftype:
+      one_of: [Cat, CatNum]
   input_info:
     input_type: selectizeInput
     input_params:
       label: Highlight category
-      choices: 
+      choices: reactive__firstCat
       selected: 
       multiple: true
       options: 
   update_param: selected
 highlight_value_color:
   show: true
+  depends_on: 
+    ftype:
+      one_of: [Cat, CatNum]
   input_info:
     input_type: colourInput
     input_params:
@@ -344,6 +350,21 @@ prefix:
       label: Prefix
       value: ''
   update_param: value
+theme:
+  show: true
+  input_info:
+    input_type: selectizeInput
+    input_params:
+      label: Theme
+      choices:
+        Datasketch:
+        - dataskecth
+        Dark Roboto:
+        - dark_roboto
+        Gray Monserrat:
+        - gray_monserrat
+      selected: dataskecth
+    update_param: selected
 text_show:
   show: true
   input_info:
@@ -354,13 +375,16 @@ text_show:
   update_param: value
 slice_n:
   show: true
+  depends_on: 
+    ftype:
+      one_of: [Cat, CatNum]
   input_info:
     input_type: sliderInput
     input_params:
       label: Slice
       min: 0
-      max: 5
-      value: 1
+      max: reactive_numCat
+      value: 4
       step: 1
   update_param: value
 sort:

@@ -127,6 +127,13 @@ server <-  function(input, output, session) {
     sum(is.na(input$data_input$data$a)) >= 1
   }, env = react_env)
   
+  
+  numCat <- reactive({
+   n <- length(unique(input$data_input$data$a))
+   n
+  }, env = react_env)
+  
+  
   ftype <- reactive({
     if (is.null(input$data_input$dic$ctype)) return()
     ftype_riddle <- input$data_input$dic$ctype
@@ -135,9 +142,10 @@ server <-  function(input, output, session) {
   }, env = react_env)
   
   legend_has_na <- reactive({
-  if (ncol(input$data_input$data) < 2) l_na <- FALSE
-   l_na <- sum(is.na(input$data_input$data$b)) >= 1 & ftype() %in%  c('CatCat', 'CatCatNum')
-   l_na
+  # if (ncol(input$data_input$data) < 2) l_na <- FALSE
+  #  l_na <- sum(is.na(input$data_input$data$b)) >= 1 & ftype() %in%  c('CatCat', 'CatCatNum')
+  #  l_na
+    TRUE
   }, env = react_env)
   
   ftype_image_recommendation <- reactive({
@@ -190,10 +198,23 @@ map(all_sections, function(section){
   
   
   opts_viz <- reactive({
-    params <- vals$inputs[-1]
-    #params$marks <- strsplit(input$marks, '&')[[1]]
+    params <- vals$inputs
+    params <- params[setdiff(names(params), c('library','theme'))]
+    params$marks <- strsplit(input$marks, '&')[[1]]
     params
   })
+  
+  theme_viz <- reactive({
+    default_themes <- yaml::read_yaml('data/aux/themes.yaml')
+    select_theme <- input$theme
+    if (is.null(select_theme)) select_theme <- 'dataskecth'
+    theme <- default_themes[[select_theme]]
+    theme
+  })
+  
+ colortheme <-  reactive({
+  '#FEAFEA'
+ }, env = react_env)
   
   vizHg <- reactive({
     
@@ -202,7 +223,7 @@ map(all_sections, function(section){
     typeV <- paste0('hgch_', gtype, '_', ctype)
     data <- data_viz()
     
-    viz <- do.call(typeV, c(list(data = data, opts = opts_viz())))
+    viz <- do.call(typeV, c(list(data = data, opts = opts_viz(), theme = hgchmagic::tma(theme_viz()))))
     viz
     
   })
