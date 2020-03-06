@@ -4,10 +4,11 @@ Format plot:
 Chart titles:
 - title
 - subtitle
+- caption
 Axis Names:
 - hor_label
 - ver_label
-Chart_styles:
+Chart styles:
 - theme
 - background
 - fill_opacity
@@ -15,13 +16,13 @@ Chart_styles:
 - spline
 - start_zero
 - color_scale
-Number_format:
+Number format:
 - n_digits
 - marks
 - prefix
 - suffix
 - agg_text
-Data_settings:
+Data settings:
 - agg
 - drop_na
 - drop_na_legend
@@ -33,9 +34,6 @@ Data_settings:
 - order2
 - order1
 - slice_n
-Lines:
-- hor_line
-- ver_line
 Highligth:
 - highlight_value
 - highlight_value_color

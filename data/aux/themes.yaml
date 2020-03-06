@@ -1,8 +1,19 @@
 ---
 datasketch:
-  background: "#FDCFFF"
-  colors_diff: false
+  font_family: "Ubuntu"
 dark_roboto:
-  background: "#2D2D2D"
+  colors: ["#f9e853", "#9cec5b", "#50c5b7", "#b33f90", "#ff9a2c", "#54419b", "#f75e64", "#5d6ae9"]
+  font_family: "Roboto"
+  font_size: "13px"
+  font_color: "#CCCCCC"
+  labsData_colLabel: "#CCCCCC"
+  labsData_familyLabel: "Roboto"
+  labsData_sizeLabel: "11px"
 gray_monserrat:
-  background: "#F2F2F2"
+  colors: ["#cae85d", "#1e94b0", "#ff9a2c", "#3be0c2", "#a052bc", "#e54b45", "#6668e1", "#fed06e"]
+  font_family: "Montserrat"
+  font_size: "13px"
+  font_color: "#1D4049"
+  labsData_colLabel: "#1D4049"
+  labsData_familyLabel: "Montserrat"
+  labsData_sizeLabel: "11px"

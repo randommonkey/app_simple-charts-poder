@@ -44,7 +44,7 @@ background:
     input_type: colourInput
     input_params:
       label: Background
-      value: "#FFFFFFF" #reactive__colortheme
+      value: "#FAFAFA" #reactive__colortheme
       allowTransparent: true
   update_param: value
 caption:
@@ -276,7 +276,7 @@ order:
     input_type: selectizeInput
     input_params:
       label: Category order
-      choices: 
+      choices: reactive__firstCat
       selected: 
       multiple: true
       options:

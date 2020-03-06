@@ -14,7 +14,7 @@ input_ids_values <- lapply(input_ids, function(i){
 })
 names(input_ids_values) <- input_ids
 all_sections <- names(yaml::read_yaml('parmesan/layout.yaml'))
-
+default_themes <- yaml::read_yaml('data/aux/themes.yaml')
 
 ui <- panelsPage(
   panel(
@@ -34,14 +34,15 @@ ui <- panelsPage(
   panel(
     title = "Dataset",
     width = 400,
-    collapsed = TRUE,
-    body = div(
+    body = list(
       uiOutput("select_var"),
       uiOutput("dataset") 
     )
   ),
   panel(
     title = "Edit viz",
+    color = "chardonnay",
+    #collapsed = TRUE,
     width = 350,
     body = div(
       class = 'controls'
@@ -49,20 +50,21 @@ ui <- panelsPage(
   ),
   panel(
     title = "Viz",
+    color = "chardonnay",
+    can_collapse = FALSE,
     body = div(
       uiOutput("vizView"),
-      verbatimTextOutput('blabla'),
-      shinypanels::modal(id = 'test', title = 'Download plot',
+      shinypanels::modal(id = 'test', title = 'Choose any format',
                          conditionalPanel(
                            condition = "input.library == 'highcharter'",
-                           downloadImagesUI("down_hgchmagic", "Descarga", c("html", "png", "jpeg", "pdf"))
+                           downloadImagesUI("down_hgchmagic", "Download", c("html", "png", "jpeg", "pdf"))
                          ),
                          conditionalPanel(
                            condition = "input.library == 'ggplot'",
-                           downloadImagesUI("down_ggmagic", "Descarga", c( "svg", "png", "jpeg", "pdf"))
+                           downloadImagesUI("down_ggmagic", "Download", c( "svg", "png", "jpeg", "pdf"))
                          )
       ),
-      shinypanels::modalButton(label = "Download plot", modal_id = "test")
+      div(style="text-align:right;", shinypanels::modalButton(label = "Download", modal_id = "test"))
     ),
     footer = uiOutput("viz_icons")
   )
@@ -90,8 +92,8 @@ server <-  function(input, output, session) {
                           infoList = list(
                             "pasted" = ("Esto es información sobre el paste"),
                             "fileUpload" = HTML("Esto es información sobre el fileUpload"),
-                            "sampleData" = HTML("Info sample Data"),
-                            "googleSheets" = HTML("IFO GGO")
+                            "sampleData" = infomessage(type = "info", p("You can start with a test data, choose a data sample and ")),
+                            "googleSheets" = infomessage(type = "info", p("You can connect one spreed sheet "))
                           ))
   
   
@@ -110,7 +112,7 @@ server <-  function(input, output, session) {
     if(is.null(inputData()))return()
     order_var <- input$var_order
     suppressWarnings(
-      hotr("data_input", data = inputData(), order = order_var, options = list(height = 470), enableCTypes = TRUE)
+      hotr("data_input", data = inputData(), order = order_var, options = list(height = 570))
     )
   })
   
@@ -171,7 +173,7 @@ server <-  function(input, output, session) {
   
   output$viz_icons <- renderUI({
     buttonImageInput('viz_selection',
-                     'Viz type', 
+                     HTML('<div class = "style_section">Choose a visualization type</div>'), 
                      images = ftype_image_recommendation(),
                      path = 'img/svg/',
                      format = 'svg',
@@ -199,33 +201,41 @@ map(all_sections, function(section){
   
   opts_viz <- reactive({
     params <- vals$inputs
-    params <- params[setdiff(names(params), c('library','theme'))]
+    params <- params[setdiff(names(params), c('library'))]
     params$marks <- strsplit(input$marks, '&')[[1]]
+    theme_select <- input$theme
+    if (is.null(theme_select)) theme_select <- 'datasketch'
+    params$theme <- default_themes[[theme_select]]
     params
   })
   
-  theme_viz <- reactive({
-    default_themes <- yaml::read_yaml('data/aux/themes.yaml')
-    select_theme <- input$theme
-    if (is.null(select_theme)) select_theme <- 'dataskecth'
-    theme <- default_themes[[select_theme]]
-    theme
+  
+
+  observeEvent(input$theme, {
+    tema <- input$theme
+    if (is.null(tema)) tema <- 'datasketch'
+    if (tema == "datasketch") {
+      updateColourInput(session, "background", value = "#ffffff")}
+    if (tema == "dark_roboto") {
+      updateColourInput(session, "background", value = "#2d2d2d")}
+    if (tema == 'gray_monserrat') {
+      updateColourInput(session, "background", value = "#f2f2f2")}
   })
   
- colortheme <-  reactive({
-  '#FEAFEA'
- }, env = react_env)
+  
+  observeEvent(input$viz_selection, {
+    updateSelectizeInput(session, "theme", selected = input$theme)
+    updateColourInput(session, "background", value = input$background)
+  })
+    
   
   vizHg <- reactive({
-    
     ctype <- ftype()
     gtype <- actual_but$active
     typeV <- paste0('hgch_', gtype, '_', ctype)
     data <- data_viz()
-    
-    viz <- do.call(typeV, c(list(data = data, opts = opts_viz(), theme = hgchmagic::tma(theme_viz()))))
+    viz <- do.call(typeV, c(list(data = data, opts = opts_viz())))
     viz
-    
   })
   
   output$vizViewHg <- renderHighchart({
@@ -235,7 +245,7 @@ map(all_sections, function(section){
   })
   
   vizGg <- reactive({
-    #if (input$library_viz != "highchart") return()
+    
     ctype <- ftype()
     gtype <- actual_but$active
     typeV <- paste0('gg_', gtype, '_', ctype)
@@ -247,16 +257,18 @@ map(all_sections, function(section){
   })
   
   output$vizViewGg <- renderPlot({
+    suppressWarnings(
     vizGg()
+    )
   })
   
   output$vizView <- renderUI({
     if (is.null(input$library)) return()
     
     if (input$library == "highcharter") {
-      highchartOutput("vizViewHg")
+      highchartOutput("vizViewHg", height = 530)
     } else {
-      plotOutput("vizViewGg")
+      plotOutput("vizViewGg", height = 530)
     }
   })
   
